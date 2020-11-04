@@ -225,10 +225,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2925767743904879608, guid: b5b04f1047b3705419e4008cb2ee47cf, type: 3}
-      propertyPath: m_Convex
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3794958411980635131, guid: b5b04f1047b3705419e4008cb2ee47cf, type: 3}
       propertyPath: m_Name
       value: Pink
