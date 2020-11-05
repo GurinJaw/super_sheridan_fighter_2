@@ -2,6 +2,8 @@
 
 public class CharacterController : MonoBehaviour
 {
+    [SerializeField] private string characterName = "";
+
     private int playerIndex = 0;
     private CharacterAnimator characterAnimator = null;
     private Transform enemyTransform = null;
@@ -42,6 +44,10 @@ public class CharacterController : MonoBehaviour
         SubscribeToEvents();
     }
 
+    public string GetCharacterName()
+    {
+        return characterName;
+    }
     #endregion
 
     #region PRIVATE

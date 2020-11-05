@@ -71,6 +71,10 @@ PrefabInstance:
       propertyPath: playerNumber
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4528853533693735222, guid: 8febc16397cd148449faa7eec756945b, type: 3}
+      propertyPath: characterName
+      value: Jolleen 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6365528227886899556, guid: 8febc16397cd148449faa7eec756945b, type: 3}
       propertyPath: m_TagString
       value: Damage_1

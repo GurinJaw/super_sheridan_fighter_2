@@ -1,18 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private enum GamePhase
     {
-        
+        splashScreen = 0,
+        characterSelect = 1
     }
 
-    // Update is called once per frame
+    [SerializeField] private GameObject splashScreen = null;
+    [SerializeField] private GameObject selectScreen = null;
+
+    private GamePhase currentPhase = GamePhase.splashScreen;
+
+    #region UNITY
+    void Start()
+    {
+
+    }
+
     void Update()
     {
-        
+        ProcessPlayerInput();
     }
+    #endregion
+
+    #region PRIVATE
+    void ProcessPlayerInput()
+    {
+        switch (currentPhase)
+        {
+            case GamePhase.splashScreen:
+                if (Input.GetButtonDown("A0"))
+                {
+                    splashScreen.SetActive(false);
+                    selectScreen.SetActive(true);
+                    currentPhase = GamePhase.characterSelect;
+                }
+                break;
+        }
+    }
+    #endregion
 }
