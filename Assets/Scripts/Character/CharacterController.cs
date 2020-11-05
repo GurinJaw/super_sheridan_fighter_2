@@ -147,7 +147,7 @@ public class CharacterController : MonoBehaviour
         characterAnimator.SetBool(AnimatorParameter.reverse, _direction * OrientationDirection() < 0);
         characterAnimator.SetBool(AnimatorParameter.walk, true);
 
-        Vector2 currentPos = transform.position;
+        Vector3 currentPos = transform.position;
         currentPos.x += movementSpeed * _direction * Time.deltaTime;
         transform.position = currentPos;
     }
