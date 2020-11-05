@@ -15,7 +15,7 @@ public class CharacterController : MonoBehaviour
     #region UNITY
     private void Start()
     {
-        InitializeCharacter(0, null);
+        // InitializeCharacter(0, null);
     }
 
     private void OnDestroy()
@@ -26,6 +26,7 @@ public class CharacterController : MonoBehaviour
     private void Update()
     {
         ProcessPlayerInput();
+        ProcessPlayerOrientation();
     }
     #endregion
 
@@ -77,7 +78,7 @@ public class CharacterController : MonoBehaviour
         if (_other.tag.Contains(playerIndex.ToString())) return;
         if (!_other.tag.Contains("Damage")) return;
 
-        Debug.Log("Trigger enter! " + _other.tag);
+        // Debug.Log("Trigger enter! " + _other.tag);
         ProcessDamage();
     }
 
@@ -88,6 +89,20 @@ public class CharacterController : MonoBehaviour
         takenDamageAt = Time.time;
         characterAnimator.SetTrigger(AnimatorParameter.hit);
         // TODO: Calculate damage.
+    }
+
+    void ProcessPlayerOrientation()
+    {
+        int targetAngle = 90;
+
+        if (transform.position.x > enemyTransform.position.x) targetAngle = 270;
+
+        if (transform.rotation.eulerAngles.y == targetAngle) return;
+
+        Vector3 targetRotation = new Vector3(0, targetAngle, 0);
+        Quaternion targetQuaternion = Quaternion.Euler(targetRotation);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetQuaternion, Time.deltaTime * 5f);
     }
 
     #region INPUT
