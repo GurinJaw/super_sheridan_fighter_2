@@ -6,7 +6,8 @@ TagManager:
   tags:
   - Player_1
   - Player_2
-  - Player_1_Damage
+  - Damage_0
+  - Damage_1
   layers:
   - Default
   - TransparentFX

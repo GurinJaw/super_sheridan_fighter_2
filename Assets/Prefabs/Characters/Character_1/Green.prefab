@@ -410,6 +410,7 @@ GameObject:
   - component: {fileID: 1164334916}
   - component: {fileID: 30985124}
   - component: {fileID: 4528853533693735222}
+  - component: {fileID: 667732473}
   m_Layer: 8
   m_Name: Green
   m_TagString: Player_1
@@ -481,7 +482,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2212ee4611f43324faafca3f143b7d45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNumber: 1
+--- !u!114 &667732473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031137533598606240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ed048b3464861c4982256334f861729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2206495515140339588
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,7 +537,7 @@ GameObject:
   - component: {fileID: 1840063277}
   m_Layer: 0
   m_Name: Damage_Collider
-  m_TagString: Player_1_Damage
+  m_TagString: Damage_0
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -890,7 +902,7 @@ GameObject:
   - component: {fileID: 1506310767}
   m_Layer: 0
   m_Name: mixamorig:LeftForeArm
-  m_TagString: Player_1_Damage
+  m_TagString: Damage_0
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1879,7 +1891,7 @@ GameObject:
   - component: {fileID: 172044015}
   m_Layer: 0
   m_Name: Damage_Collider
-  m_TagString: Player_1_Damage
+  m_TagString: Damage_0
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1909,8 +1921,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.10253104, y: 0.5991978, z: 0.11069932}
-  m_Center: {x: 0.0044898656, y: 0.20040375, z: -0.02503364}
+  m_Size: {x: 0.10253104, y: 0.5991978, z: 0.28548267}
+  m_Center: {x: 0.0044898745, y: 0.20040385, z: 0.06235807}
 --- !u!54 &172044015
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2128,7 +2140,7 @@ GameObject:
   - component: {fileID: 379687833}
   m_Layer: 0
   m_Name: mixamorig:RightForeArm
-  m_TagString: Player_1_Damage
+  m_TagString: Damage_0
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
