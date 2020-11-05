@@ -12,9 +12,13 @@ public class CharacterController : MonoBehaviour
     private float takenDamageAt = 0f;
     private float damageCooldown = 0.4f;
 
+    private int health = 0;
+
     private bool locked = true;
     private bool initialized = false;
 
+    private const int maxHealth = 100;
+    private const int damage = 5;
     private const float movementSpeed = 1.5f;
 
     #region UNITY
@@ -49,6 +53,8 @@ public class CharacterController : MonoBehaviour
 
         characterAnimator.SetBool(AnimatorParameter.start, true);
 
+        health = maxHealth;
+
         SubscribeToEvents();
         initialized = true;
     }
@@ -61,6 +67,14 @@ public class CharacterController : MonoBehaviour
     public void LockPlayer(bool _lock)
     {
         locked = _lock;
+    }
+
+    public void ResetPlayer()
+    {
+        // TODO
+        health = maxHealth;
+        // Update bar
+        characterAnimator.SetBool(AnimatorParameter.lose, false);
     }
     #endregion
 
@@ -95,10 +109,11 @@ public class CharacterController : MonoBehaviour
 
     void OnTrigger(Collider _other)
     {
+        if (health <= 0) return;
+
         if (_other.tag.Contains(playerIndex.ToString())) return;
         if (!_other.tag.Contains("Damage")) return;
 
-        // Debug.Log("Trigger enter! " + _other.tag);
         ProcessDamage();
     }
 
@@ -108,11 +123,19 @@ public class CharacterController : MonoBehaviour
 
         takenDamageAt = Time.time;
         characterAnimator.SetTrigger(AnimatorParameter.hit);
-        // TODO: Calculate damage.
+        health -= damage;
+
+        // TODO Update health bar
+        if (health <= 0)
+        {
+            characterAnimator.SetBool(AnimatorParameter.lose, true);
+        }
     }
 
     void ProcessPlayerOrientation()
     {
+        if (health <= 0) return;
+
         int targetAngle = 90;
 
         if (transform.position.x > enemyTransform.position.x) targetAngle = 270;

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEditorInternal;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -7,8 +9,9 @@ public class GameManager : MonoBehaviour
     {
         splashScreen = 0,
         characterSelect = 1,
-        prepareRound = 2,
-        playingRound = 3
+        preparingRound = 2,
+        playingRound = 3,
+        concludingRound = 4
     }
 
     private struct Player
@@ -25,9 +28,20 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Text[] readyUI = null;
 
+    [SerializeField] private Text roundText = null;
+    [SerializeField] private Text roundTimeText = null;
+    [SerializeField] private Text[] playersWinCount = null;
+
     private GamePhase currentPhase = GamePhase.splashScreen;
     private CharacterManager characterManager = null;
+
+    private int currentRound = 0;
+
+    private int roundSecondsLeft = 0;
+    private float roundEndTime = 0f;
+
     private const int playersCount = 2;
+    private const int roundTime = 99;
 
     #region UNITY
     void Start()
@@ -44,6 +58,9 @@ public class GameManager : MonoBehaviour
         {
             ProcessPlayerInput(players[i].playerIndex);
         }
+
+        if (currentPhase == GamePhase.playingRound)
+            ProcessRound();
     }
     #endregion
 
@@ -106,16 +123,77 @@ public class GameManager : MonoBehaviour
 
     void InitializeMatch()
     {
+        // If any of the players isn't ready, return.
         for (int i = 0; i < players.Length; i++)
         {
             if (!players[i].isReady) return;
         }
 
+        // Initialize the characters
         characterManager.InitializeCharacters();
+        // Enable UI elements
         characterSelectUI.SetActive(false);
         roundUI.SetActive(true);
 
-        currentPhase = GamePhase.prepareRound;
+        StartCoroutine(RoundStartRoutine());
+        currentPhase = GamePhase.preparingRound;
+    }
+
+    IEnumerator RoundStartRoutine()
+    {
+        int secondsLeft = 3;
+        float startTime = Time.time + secondsLeft;
+        roundTimeText.text = secondsLeft.ToString();
+
+        // Countdown to start round
+        while (Time.time < startTime)
+        {
+            if (startTime - Time.time <= secondsLeft - 1)
+            {
+                secondsLeft--;
+                roundTimeText.text = secondsLeft.ToString();
+            }
+
+            yield return null;
+        }
+
+        roundTimeText.text = "GO!";
+
+        // Unlock players.
+        characterManager.LockCharacters(false);
+
+        // Show health bars.
+
+        // Preview "GO" for 1 second.
+        float goPreview = Time.time + 1;
+
+        while (Time.time < goPreview)
+        {
+            yield return null;
+        }
+
+        currentRound++;
+        roundText.text = "Round " + currentRound;
+
+        roundTimeText.text = (roundTime - 1).ToString();
+        roundSecondsLeft = roundTime - 1;
+        roundEndTime = Time.time + roundSecondsLeft;
+
+        currentPhase = GamePhase.playingRound;
+    }
+
+    void ProcessRound()
+    {
+        if (roundEndTime - Time.time <= roundSecondsLeft - 1)
+        {
+            roundSecondsLeft--;
+            roundTimeText.text = roundSecondsLeft.ToString();
+        }
+        else
+        {
+            // End round.
+            return;
+        }
     }
     #endregion
 }

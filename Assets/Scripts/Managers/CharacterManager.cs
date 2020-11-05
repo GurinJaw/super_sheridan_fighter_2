@@ -1,5 +1,6 @@
 ﻿using UnityEngine.UI;
 using UnityEngine;
+using System.Linq;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -35,6 +36,18 @@ public class CharacterManager : MonoBehaviour
     {
         playerPrefabs[0].GetComponent<CharacterController>().InitializeCharacter(0, playerPrefabs[1].transform);
         playerPrefabs[1].GetComponent<CharacterController>().InitializeCharacter(1, playerPrefabs[0].transform);
+    }
+
+    /// <summary>
+    /// Unlock characters movement.
+    /// </summary>
+    /// <param name="_lock">Lock</param>
+    public void LockCharacters(bool _lock)
+    {
+        for (int i = 0; i < playerPrefabs.Length; i++)
+        {
+            playerPrefabs[i].GetComponent<CharacterController>().LockPlayer(_lock);
+        }
     }
 
     /// <summary>
