@@ -988,7 +988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPrefabs:
   - {fileID: 1406595199976081813, guid: b545d9da6c5ba61459213efd59fa0718, type: 3}
-  - {fileID: 7550103508761105772, guid: 584653c162b7c564bb799ec02409327d, type: 3}
+  - {fileID: 3794958411980635131, guid: b5b04f1047b3705419e4008cb2ee47cf, type: 3}
   spawnPointA: {fileID: 128369583}
   spawnPointB: {fileID: 1002015758}
 --- !u!114 &1503053293

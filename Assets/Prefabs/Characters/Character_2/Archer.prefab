@@ -148,8 +148,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.10253104, y: 0.8323705, z: 0.28548267}
-  m_Center: {x: 0.004489774, y: -0.039646648, z: 0.062358074}
+  m_Size: {x: 0.10253104, y: 0.9781749, z: 0.5491484}
+  m_Center: {x: 0.0044898586, y: -0.11254879, z: 0.19419092}
 --- !u!54 &1916632989
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -300,6 +300,7 @@ GameObject:
   - component: {fileID: 1421654480941014955}
   - component: {fileID: 1869092331}
   - component: {fileID: 1869092330}
+  - component: {fileID: 1124353092}
   m_Layer: 0
   m_Name: LeftLeg
   m_TagString: Untagged
@@ -352,6 +353,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1124353092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512534307995305853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2529a0ac625a9e44b9b81de41b2fb098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &536713686278701022
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,6 +1159,7 @@ GameObject:
   - component: {fileID: 2688367914838973749}
   - component: {fileID: 1869092329}
   - component: {fileID: 1869092328}
+  - component: {fileID: 1124353091}
   m_Layer: 0
   m_Name: RightLeg
   m_TagString: Untagged
@@ -1198,6 +1212,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1124353091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2755063454608072244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2529a0ac625a9e44b9b81de41b2fb098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3070672536718372480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,6 +1606,7 @@ GameObject:
   - component: {fileID: 7313292223378257813}
   - component: {fileID: 3263705317359137129}
   - component: {fileID: 5343705398381917986}
+  - component: {fileID: 1124353090}
   m_Layer: 0
   m_Name: Spine
   m_TagString: Untagged
@@ -1631,6 +1658,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1124353090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4751980858029558966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2529a0ac625a9e44b9b81de41b2fb098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4755691672114991403
 GameObject:
   m_ObjectHideFlags: 0
@@ -1859,6 +1898,7 @@ GameObject:
   - component: {fileID: 982201041813061076}
   - component: {fileID: 2588480835191274130}
   - component: {fileID: 1020370074207046485}
+  - component: {fileID: 1124353089}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -1910,6 +1950,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1124353089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5889378673469199118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2529a0ac625a9e44b9b81de41b2fb098, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6084902190563897902
 GameObject:
   m_ObjectHideFlags: 0
