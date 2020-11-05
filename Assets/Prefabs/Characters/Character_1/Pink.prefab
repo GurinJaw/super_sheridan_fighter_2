@@ -75,6 +75,10 @@ PrefabInstance:
       propertyPath: characterName
       value: Jolleen
       objectReference: {fileID: 0}
+    - target: {fileID: 4528853533693735222, guid: 8febc16397cd148449faa7eec756945b, type: 3}
+      propertyPath: fireOrbPrefab
+      value: 
+      objectReference: {fileID: 7179937354099061933, guid: 091e24e4c18a0244790c72cb0161b501, type: 3}
     - target: {fileID: 6365528227886899556, guid: 8febc16397cd148449faa7eec756945b, type: 3}
       propertyPath: m_TagString
       value: Damage_1

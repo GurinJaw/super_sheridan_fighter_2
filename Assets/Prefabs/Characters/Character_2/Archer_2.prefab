@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Damage_1
       objectReference: {fileID: 0}
+    - target: {fileID: 1869092326, guid: b545d9da6c5ba61459213efd59fa0718, type: 3}
+      propertyPath: fireOrbPrefab
+      value: 
+      objectReference: {fileID: 7179937354099061933, guid: 091e24e4c18a0244790c72cb0161b501, type: 3}
     - target: {fileID: 1916632987, guid: b545d9da6c5ba61459213efd59fa0718, type: 3}
       propertyPath: m_TagString
       value: Damage_1

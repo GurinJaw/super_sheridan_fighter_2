@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterController : MonoBehaviour
 {
@@ -7,13 +9,19 @@ public class CharacterController : MonoBehaviour
 
     [SerializeField] private string characterName = "";
 
+    [SerializeField] private GameObject fireOrbPrefab = null;
+
+    [SerializeField] private Transform fireOrbSpawnPos = null;
+
     private int playerIndex = 0;
     private CharacterAnimator characterAnimator = null;
     private Transform enemyTransform = null;
     private DamageTrigger[] damageTriggers = null;
 
+    private List<GameObject> fireOrbs = null;
+
     private float takenDamageAt = 0f;
-    private float damageCooldown = 0.4f;
+    private float firedAt = 0f;
 
     private int health = 0;
 
@@ -21,6 +29,11 @@ public class CharacterController : MonoBehaviour
     private bool initialized = false;
 
     private int maxHealth = 0;
+
+    private const float damageCooldown = 0.4f;
+    private const float fireballCooldown = 1.5f;
+
+    private const float fireballSpeed = 3f;
 
     private const int damage = 5;
     private const float movementSpeed = 1.5f;
@@ -31,6 +44,8 @@ public class CharacterController : MonoBehaviour
         if (!initialized) return;
 
         UnsubscribeFromEvents();
+
+        StopAllCoroutines();
     }
 
     private void Update()
@@ -48,7 +63,12 @@ public class CharacterController : MonoBehaviour
     #endregion
 
     #region PUBLIC API
-
+    /// <summary>
+    /// Initializes the character.
+    /// </summary>
+    /// <param name="_playerIndex">The player index.</param>
+    /// <param name="_enemyTransform">The enemy transform.</param>
+    /// <param name="_maxHealth">The max health.</param>
     public void InitializeCharacter(int _playerIndex, Transform _enemyTransform, int _maxHealth)
     {
         playerIndex = _playerIndex;
@@ -57,6 +77,8 @@ public class CharacterController : MonoBehaviour
 
         damageTriggers = GetComponentsInChildren<DamageTrigger>();
         characterAnimator = GetComponent<CharacterAnimator>();
+
+        fireOrbs = new List<GameObject>();
 
         characterAnimator.SetBool(AnimatorParameter.start, true);
 
@@ -67,22 +89,61 @@ public class CharacterController : MonoBehaviour
         initialized = true;
     }
 
+    /// <summary>
+    /// The character name.
+    /// </summary>
+    /// <returns></returns>
     public string GetCharacterName()
     {
         return characterName;
     }
 
-    public void LockPlayer(bool _lock)
+
+    /// <summary>
+    /// Locks the character.
+    /// </summary>
+    /// <param name="_lock"></param>
+    public void LockCharacter(bool _lock)
     {
         locked = _lock;
     }
 
+    /// <summary>
+    /// Resets the character.
+    /// </summary>
     public void ResetCharacter()
     {
         health = maxHealth;
         // Update bar
         characterAnimator.SetBool(AnimatorParameter.lose, false);
         characterAnimator.Play("Idle");
+        ResetFireOrbs();
+    }
+
+    /// <summary>
+    /// Destroys all present fireorbs instantiated by this character.
+    /// </summary>
+    public void ResetFireOrbs()
+    {
+        for (int i = 0; i < fireOrbs.Count; i++)
+        {
+            if (fireOrbs[i] != null)
+            {
+                Destroy(fireOrbs[i].gameObject);
+            }
+        }
+
+        fireOrbs.Clear();
+    }
+
+    public void ResetAnimator()
+    {
+        if (health > 0)
+            characterAnimator.Play("Idle");
+
+        characterAnimator.SetBool(AnimatorParameter.walk, false);
+        characterAnimator.SetBool(AnimatorParameter.crouch, false);
+        characterAnimator.SetBool(AnimatorParameter.jump, false);
     }
 
     /// <summary>
@@ -126,6 +187,8 @@ public class CharacterController : MonoBehaviour
 
         if (_other.tag.Contains(playerIndex.ToString())) return;
         if (!_other.tag.Contains("Damage")) return;
+
+        if (null != _other.GetComponent<FireOrb>()) Destroy(_other.gameObject);
 
         ProcessDamage();
     }
@@ -253,10 +316,26 @@ public class CharacterController : MonoBehaviour
 
     void ProcessFireball()
     {
+        if (firedAt + fireballCooldown > Time.time) return;
+
         if (Input.GetButtonDown("Y" + playerIndex))
         {
+            firedAt = Time.time;
+
             characterAnimator.SetTrigger(AnimatorParameter.fire);
+
+            StartCoroutine(FireballRoutine());
         }
+    }
+
+    IEnumerator FireballRoutine()
+    {
+        yield return new WaitForSeconds(0.8f);
+        GameObject fireOrb = Instantiate(fireOrbPrefab);
+        fireOrb.transform.position = fireOrbSpawnPos.position;
+        Rigidbody orbRigidBody = fireOrb.GetComponent<Rigidbody>();
+        orbRigidBody.AddForce(Vector3.right * OrientationDirection() * fireballSpeed, ForceMode.Impulse);
+        fireOrbs.Add(fireOrb);
     }
 
     void ProcessTaunt()

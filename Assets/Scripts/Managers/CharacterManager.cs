@@ -70,7 +70,7 @@ public class CharacterManager : MonoBehaviour
     {
         for (int i = 0; i < playerPrefabs.Length; i++)
         {
-            characterControllers[i].LockPlayer(_lock);
+            characterControllers[i].LockCharacter(_lock);
         }
     }
 
@@ -123,6 +123,18 @@ public class CharacterManager : MonoBehaviour
     {
         for (int i = 0; i < characterControllers.Length; i++)
             characterControllers[i].ResetCharacter();
+    }
+
+    /// <summary>
+    /// Resets character properties immediately after a round ends.
+    /// </summary>
+    public void StandbyCharacters()
+    {
+        for (int i = 0; i < characterControllers.Length; i++)
+        {
+            characterControllers[i].ResetFireOrbs();
+            characterControllers[i].ResetAnimator();
+        }
     }
     #endregion
 

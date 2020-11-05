@@ -90,7 +90,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1787623720155108143}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1786769536
 BoxCollider:
@@ -677,6 +677,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 3725825121162499807}
   - {fileID: 1549078821200249562}
   - {fileID: 1780623760991196198}
   - {fileID: 1786769535}
@@ -731,6 +732,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: Huntress
+  fireOrbPrefab: {fileID: 5347515463716387306, guid: d09393cb7c714294f9b4ebdd3613c5d4, type: 3}
+  fireOrbSpawnPos: {fileID: 3725825121162499807}
 --- !u!114 &434507954058991079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1763,6 +1766,36 @@ Transform:
   m_Father: {fileID: 8784474369732565673}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5257986802304156800
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3725825121162499807}
+  m_Layer: 0
+  m_Name: FireOrbSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3725825121162499807
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5257986802304156800}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.118, z: 0.644}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1787623720155108143}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5264053719217405288
 GameObject:
   m_ObjectHideFlags: 0
@@ -2209,7 +2242,7 @@ Transform:
   - {fileID: 2280103427648723761}
   - {fileID: 7313292223378257813}
   m_Father: {fileID: 1787623720155108143}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 1.6212678, y: 42.1244, z: -6.2218113}
 --- !u!1 &7512432750957934269
 GameObject:
@@ -2240,7 +2273,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1787623720155108143}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &1281939046821277054
 SkinnedMeshRenderer:

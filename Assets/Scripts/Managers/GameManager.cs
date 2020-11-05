@@ -248,6 +248,11 @@ public class GameManager : MonoBehaviour
 
         int? winnerIndex = characterManager.RoundWinnerIndex();
 
+        // Lock player characters.
+        characterManager.LockCharacters(true);
+        // Standby characters.
+        characterManager.StandbyCharacters();
+
         // If someone won the round.
         if (winnerIndex != null)
         {
@@ -260,10 +265,7 @@ public class GameManager : MonoBehaviour
                 ConcludeGame(winnerIndex.Value);
                 return;
             }
-        }
-
-        // Lock players.
-        characterManager.LockCharacters(true);
+        }        
 
         StartCoroutine(RoundStartRoutine());
         currentPhase = GamePhase.preparingRound;
