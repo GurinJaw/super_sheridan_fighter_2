@@ -2,6 +2,9 @@
 
 public class CharacterController : MonoBehaviour
 {
+    public delegate void CharacterDamageDelegate(int _playerIndex, int _characterHealth);
+    public CharacterDamageDelegate OnTakenDamage = null;
+
     [SerializeField] private string characterName = "";
 
     private int playerIndex = 0;
@@ -17,7 +20,8 @@ public class CharacterController : MonoBehaviour
     private bool locked = true;
     private bool initialized = false;
 
-    private const int maxHealth = 100;
+    private int maxHealth = 0;
+
     private const int damage = 5;
     private const float movementSpeed = 1.5f;
 
@@ -33,6 +37,8 @@ public class CharacterController : MonoBehaviour
     {
         if (!initialized) return;
 
+        if (health <= 0) return;
+
         ProcessPlayerOrientation();
 
         if (locked) return;
@@ -43,16 +49,18 @@ public class CharacterController : MonoBehaviour
 
     #region PUBLIC API
 
-    public void InitializeCharacter(int _playerIndex, Transform _enemyTransform)
+    public void InitializeCharacter(int _playerIndex, Transform _enemyTransform, int _maxHealth)
     {
         playerIndex = _playerIndex;
         enemyTransform = _enemyTransform;
+
 
         damageTriggers = GetComponentsInChildren<DamageTrigger>();
         characterAnimator = GetComponent<CharacterAnimator>();
 
         characterAnimator.SetBool(AnimatorParameter.start, true);
 
+        maxHealth = _maxHealth;
         health = maxHealth;
 
         SubscribeToEvents();
@@ -69,13 +77,18 @@ public class CharacterController : MonoBehaviour
         locked = _lock;
     }
 
-    public void ResetPlayer()
+    public void ResetCharacter()
     {
-        // TODO
         health = maxHealth;
         // Update bar
         characterAnimator.SetBool(AnimatorParameter.lose, false);
+        characterAnimator.Play("Idle");
     }
+
+    /// <summary>
+    /// Current player health.
+    /// </summary>
+    public int CurrentHealth { get { return health; } }
     #endregion
 
     #region PRIVATE
@@ -119,14 +132,18 @@ public class CharacterController : MonoBehaviour
 
     void ProcessDamage()
     {
+        if (locked) return;
+
         if (takenDamageAt + damageCooldown > Time.time) return;
 
         takenDamageAt = Time.time;
         characterAnimator.SetTrigger(AnimatorParameter.hit);
-        health -= damage;
+        health = Mathf.Clamp(health - damage, 0, maxHealth);
 
-        // TODO Update health bar
-        if (health <= 0)
+        if (OnTakenDamage != null)
+            OnTakenDamage(playerIndex, health);
+
+        if (health == 0)
         {
             characterAnimator.SetBool(AnimatorParameter.lose, true);
         }
@@ -134,8 +151,6 @@ public class CharacterController : MonoBehaviour
 
     void ProcessPlayerOrientation()
     {
-        if (health <= 0) return;
-
         int targetAngle = 90;
 
         if (transform.position.x > enemyTransform.position.x) targetAngle = 270;
@@ -173,11 +188,11 @@ public class CharacterController : MonoBehaviour
 
         if (moveInput > 0.5f)
         {
-            MovePlayer(1);
+            MoveCharacter(1);
         }
         else if (moveInput < -0.5f)
         {
-            MovePlayer(-1);
+            MoveCharacter(-1);
         }
         else
         {
@@ -185,7 +200,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    void MovePlayer(int _direction)
+    void MoveCharacter(int _direction)
     {
         characterAnimator.SetBool(AnimatorParameter.reverse, _direction * OrientationDirection() < 0);
         characterAnimator.SetBool(AnimatorParameter.walk, true);

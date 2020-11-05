@@ -4,15 +4,31 @@ using System.Linq;
 
 public class CharacterManager : MonoBehaviour
 {
+    public delegate void PlayerDamageDelegate(int _characterIndex, int _playerHealth);
+    public PlayerDamageDelegate OnCharacterTakenDamage = null;
+
     [SerializeField] private GameObject[] characterPrefabs = null;
     [SerializeField] private Transform[] spawnPoints = null;
 
     [SerializeField] private Text[] playerNameUI = null;
 
+    private CharacterController[] characterControllers = null;
+
     private int[] playersSelectionIndex = null;
     private GameObject[] playerPrefabs = null;
 
     #region UNITY
+    private void OnDestroy()
+    {
+        if (characterControllers != null)
+        {
+            for (int i = 0; i < characterControllers.Length; i++)
+            {
+                if (characterControllers[i] != null)
+                    characterControllers[i].OnTakenDamage -= OnTakenDamage;
+            }
+        }
+    }
     #endregion
 
     #region PUBLIC API
@@ -24,6 +40,8 @@ public class CharacterManager : MonoBehaviour
     public void Initialize(int _playersCount, int[] _playersSelection)
     {
         playerPrefabs = new GameObject[_playersCount];
+        characterControllers = new CharacterController[_playersCount];
+
         playersSelectionIndex = _playersSelection;
 
         SpawnCharacters();
@@ -34,8 +52,14 @@ public class CharacterManager : MonoBehaviour
     /// </summary>
     public void InitializeCharacters()
     {
-        playerPrefabs[0].GetComponent<CharacterController>().InitializeCharacter(0, playerPrefabs[1].transform);
-        playerPrefabs[1].GetComponent<CharacterController>().InitializeCharacter(1, playerPrefabs[0].transform);
+        for (int i = 0; i < characterControllers.Length; i++)
+        {
+            characterControllers[i] = playerPrefabs[i].GetComponent<CharacterController>();
+            characterControllers[i].OnTakenDamage += OnTakenDamage;
+        }
+
+        characterControllers[0].InitializeCharacter(0, playerPrefabs[1].transform, CharacterMaxHealth);
+        characterControllers[1].InitializeCharacter(1, playerPrefabs[0].transform, CharacterMaxHealth);
     }
 
     /// <summary>
@@ -46,7 +70,7 @@ public class CharacterManager : MonoBehaviour
     {
         for (int i = 0; i < playerPrefabs.Length; i++)
         {
-            playerPrefabs[i].GetComponent<CharacterController>().LockPlayer(_lock);
+            characterControllers[i].LockPlayer(_lock);
         }
     }
 
@@ -67,6 +91,38 @@ public class CharacterManager : MonoBehaviour
         }
 
         SpawnCharacter(_playerIndex);
+    }
+
+    /// <summary>
+    /// Max player health.
+    /// </summary>
+    public int CharacterMaxHealth { get { return 100; } }
+
+    /// <summary>
+    /// Round winner index.
+    /// </summary>
+    /// <returns></returns>
+    public int? RoundWinnerIndex()
+    {
+        if (characterControllers[0].CurrentHealth > characterControllers[1].CurrentHealth)
+        {
+            return 0;
+        }
+        else if (characterControllers[1].CurrentHealth > characterControllers[0].CurrentHealth)
+        {
+            return 1;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Reset characters.
+    /// </summary>
+    public void ResetCharacters()
+    {
+        for (int i = 0; i < characterControllers.Length; i++)
+            characterControllers[i].ResetCharacter();
     }
     #endregion
 
@@ -92,6 +148,12 @@ public class CharacterManager : MonoBehaviour
         playerPrefabs[_playerIndex].transform.position = _spawnPoint.position;
         playerPrefabs[_playerIndex].transform.rotation = _spawnPoint.rotation;
         playerNameUI[_playerIndex].text = "P." + (_playerIndex + 1) + ": " + playerPrefabs[_playerIndex].GetComponent<CharacterController>().GetCharacterName();
+    }
+
+    void OnTakenDamage(int _characterIndex, int _playerHealth)
+    {
+        if (OnCharacterTakenDamage != null)
+            OnCharacterTakenDamage(_characterIndex, _playerHealth);
     }
     #endregion
 }

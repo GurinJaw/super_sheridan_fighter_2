@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,20 +11,23 @@ public class GameManager : MonoBehaviour
         characterSelect = 1,
         preparingRound = 2,
         playingRound = 3,
-        concludingRound = 4
+        concludingRound = 4,
+        gameOver = 5
     }
 
     private struct Player
     {
         public int playerIndex;
         public bool isReady;
+        public int winsCount;
     }
 
+    [Header("UI")]
     [SerializeField] private GameObject splashScreen = null;
     [SerializeField] private GameObject gameGUIPanel = null;
     [SerializeField] private GameObject characterSelectUI = null;
     [SerializeField] private GameObject roundUI = null;
-    [SerializeField] private Player[] players = null;
+    [SerializeField] private GameObject winScreen = null;
 
     [SerializeField] private Text[] readyUI = null;
 
@@ -32,8 +35,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text roundTimeText = null;
     [SerializeField] private Text[] playersWinCount = null;
 
+    [SerializeField] private Text winnerAnnouncement = null;
+
+    [SerializeField] private Image[] playersHealthBar = null;
+    [SerializeField] private Gradient healthBarGradient = null;
+
     private GamePhase currentPhase = GamePhase.splashScreen;
     private CharacterManager characterManager = null;
+
+    private Player[] players = null;
 
     private int currentRound = 0;
 
@@ -41,7 +51,7 @@ public class GameManager : MonoBehaviour
     private float roundEndTime = 0f;
 
     private const int playersCount = 2;
-    private const int roundTime = 99;
+    private const int roundTime = 10;
 
     #region UNITY
     void Start()
@@ -61,6 +71,9 @@ public class GameManager : MonoBehaviour
 
         if (currentPhase == GamePhase.playingRound)
             ProcessRound();
+
+        if (currentPhase == GamePhase.gameOver)
+            ProcessGameConclusion();
     }
     #endregion
 
@@ -74,6 +87,7 @@ public class GameManager : MonoBehaviour
             players[i] = new Player();
             players[i].playerIndex = i;
             players[i].isReady = false;
+            players[i].winsCount = 0;
         }
     }
 
@@ -135,17 +149,29 @@ public class GameManager : MonoBehaviour
         characterSelectUI.SetActive(false);
         roundUI.SetActive(true);
 
+        SubscribeToCharacterEvents();
+
         StartCoroutine(RoundStartRoutine());
         currentPhase = GamePhase.preparingRound;
     }
 
     IEnumerator RoundStartRoutine()
     {
+        currentRound++;
+        roundText.text = "Round " + currentRound;
+
         int secondsLeft = 3;
         float startTime = Time.time + secondsLeft;
         roundTimeText.text = secondsLeft.ToString();
 
-        // Countdown to start round
+        // Reset characters.
+        characterManager.ResetCharacters();
+
+        // Set healthbars.
+        for (int i = 0; i < playersCount; i++)
+            UpdatePlayerHealthBar(i, 1f);
+
+        // Countdown to start round.
         while (Time.time < startTime)
         {
             if (startTime - Time.time <= secondsLeft - 1)
@@ -162,18 +188,13 @@ public class GameManager : MonoBehaviour
         // Unlock players.
         characterManager.LockCharacters(false);
 
-        // Show health bars.
-
         // Preview "GO" for 1 second.
         float goPreview = Time.time + 1;
 
         while (Time.time < goPreview)
         {
             yield return null;
-        }
-
-        currentRound++;
-        roundText.text = "Round " + currentRound;
+        }        
 
         roundTimeText.text = (roundTime - 1).ToString();
         roundSecondsLeft = roundTime - 1;
@@ -189,10 +210,81 @@ public class GameManager : MonoBehaviour
             roundSecondsLeft--;
             roundTimeText.text = roundSecondsLeft.ToString();
         }
-        else
+        else if (roundSecondsLeft == 0)
         {
-            // End round.
+            roundTimeText.text = (0).ToString();
+            ConcludeRound();
             return;
+        }
+    }
+
+    void SubscribeToCharacterEvents()
+    {
+        characterManager.OnCharacterTakenDamage += OnPlayerTakenDamage;
+    }
+
+    void OnPlayerTakenDamage(int _playerIndex, int _playerHealth)
+    {
+        float ratio = (float)_playerHealth / characterManager.CharacterMaxHealth;
+
+        UpdatePlayerHealthBar(_playerIndex, ratio);
+
+        if (_playerHealth == 0)
+        {
+            ConcludeRound();
+            return;
+        }
+    }
+
+    void UpdatePlayerHealthBar(int _playerIndex, float _ratio)
+    {
+        playersHealthBar[_playerIndex].fillAmount = _ratio;
+        playersHealthBar[_playerIndex].color = healthBarGradient.Evaluate(_ratio);
+    }
+
+    void ConcludeRound()
+    {
+        currentPhase = GamePhase.concludingRound;
+
+        int? winnerIndex = characterManager.RoundWinnerIndex();
+
+        // If someone won the round.
+        if (winnerIndex != null)
+        {
+            players[winnerIndex.Value].winsCount++;
+            playersWinCount[winnerIndex.Value].text = players[winnerIndex.Value].winsCount.ToString();
+
+            // If a player won two rounds, conclude the game.
+            if (players[winnerIndex.Value].winsCount == 2)
+            {
+                ConcludeGame(winnerIndex.Value);
+                return;
+            }
+        }
+
+        // Lock players.
+        characterManager.LockCharacters(true);
+
+        StartCoroutine(RoundStartRoutine());
+        currentPhase = GamePhase.preparingRound;
+    }
+
+    void ConcludeGame(int _winnerIndex)
+    {
+        currentPhase = GamePhase.gameOver;
+
+        winnerAnnouncement.text = "Player " + (_winnerIndex + 1).ToString() + " wins!";
+        winScreen.SetActive(true);
+
+        characterManager.LockCharacters(true);
+        characterManager.ResetCharacters();
+    }
+
+    void ProcessGameConclusion()
+    {
+        if (Input.GetButtonDown("Y" + 0) || Input.GetButtonDown("Y" + 1))
+        {
+            SceneManager.LoadScene(0);
         }
     }
     #endregion

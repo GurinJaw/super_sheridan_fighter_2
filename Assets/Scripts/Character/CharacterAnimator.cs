@@ -54,5 +54,10 @@ public class CharacterAnimator : MonoBehaviour
         return canMove;
     }
 
+    public void Play(string _animationName)
+    {
+        myAnimator.Play(_animationName);
+    }
+
     #endregion
 }
