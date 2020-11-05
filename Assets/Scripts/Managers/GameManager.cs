@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -6,7 +7,8 @@ public class GameManager : MonoBehaviour
     {
         splashScreen = 0,
         characterSelect = 1,
-        prepareRound = 2
+        prepareRound = 2,
+        playingRound = 3
     }
 
     private struct Player
@@ -16,8 +18,12 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] private GameObject splashScreen = null;
-    [SerializeField] private GameObject selectScreen = null;
+    [SerializeField] private GameObject gameGUIPanel = null;
+    [SerializeField] private GameObject characterSelectUI = null;
+    [SerializeField] private GameObject roundUI = null;
     [SerializeField] private Player[] players = null;
+
+    [SerializeField] private Text[] readyUI = null;
 
     private GamePhase currentPhase = GamePhase.splashScreen;
     private CharacterManager characterManager = null;
@@ -26,6 +32,8 @@ public class GameManager : MonoBehaviour
     #region UNITY
     void Start()
     {
+        splashScreen.SetActive(true);
+
         characterManager = GetComponent<CharacterManager>();
         InitializePlayers();
     }
@@ -70,7 +78,8 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("A" + _playerIndex))
         {
             splashScreen.SetActive(false);
-            selectScreen.SetActive(true);
+            gameGUIPanel.SetActive(true);
+            characterSelectUI.SetActive(true);
             characterManager.Initialize(playersCount, new int[] { 0, 3 });
             currentPhase = GamePhase.characterSelect;
         }
@@ -83,6 +92,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("A" + _playerIndex))
         {
             players[_playerIndex].isReady = true;
+            readyUI[_playerIndex].enabled = true;
             InitializeMatch();
         }
         else
@@ -102,6 +112,8 @@ public class GameManager : MonoBehaviour
         }
 
         characterManager.InitializeCharacters();
+        characterSelectUI.SetActive(false);
+        roundUI.SetActive(true);
 
         currentPhase = GamePhase.prepareRound;
     }

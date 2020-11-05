@@ -12,7 +12,7 @@ public class CharacterController : MonoBehaviour
     private float takenDamageAt = 0f;
     private float damageCooldown = 0.4f;
 
-    private bool locked = false;
+    private bool locked = true;
     private bool initialized = false;
 
     private const float movementSpeed = 1.5f;
@@ -46,6 +46,9 @@ public class CharacterController : MonoBehaviour
 
         damageTriggers = GetComponentsInChildren<DamageTrigger>();
         characterAnimator = GetComponent<CharacterAnimator>();
+
+        characterAnimator.SetBool(AnimatorParameter.start, true);
+
         SubscribeToEvents();
         initialized = true;
     }
