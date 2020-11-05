@@ -12,23 +12,28 @@ public class CharacterController : MonoBehaviour
     private float takenDamageAt = 0f;
     private float damageCooldown = 0.4f;
 
+    private bool locked = false;
+    private bool initialized = false;
+
     private const float movementSpeed = 1.5f;
 
     #region UNITY
-    private void Start()
-    {
-        // InitializeCharacter(0, null);
-    }
-
     private void OnDestroy()
     {
+        if (!initialized) return;
+
         UnsubscribeFromEvents();
     }
 
     private void Update()
     {
-        ProcessPlayerInput();
+        if (!initialized) return;
+
         ProcessPlayerOrientation();
+
+        if (locked) return;
+
+        ProcessPlayerInput();
     }
     #endregion
 
@@ -42,11 +47,17 @@ public class CharacterController : MonoBehaviour
         damageTriggers = GetComponentsInChildren<DamageTrigger>();
         characterAnimator = GetComponent<CharacterAnimator>();
         SubscribeToEvents();
+        initialized = true;
     }
 
     public string GetCharacterName()
     {
         return characterName;
+    }
+
+    public void LockPlayer(bool _lock)
+    {
+        locked = _lock;
     }
     #endregion
 
