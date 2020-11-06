@@ -122,7 +122,10 @@ public class CharacterManager : MonoBehaviour
     public void ResetCharacters()
     {
         for (int i = 0; i < characterControllers.Length; i++)
+        {
             characterControllers[i].ResetCharacter();
+            characterControllers[i].transform.position = spawnPoints[i].position;
+        }
     }
 
     /// <summary>
@@ -135,6 +138,24 @@ public class CharacterManager : MonoBehaviour
             characterControllers[i].ResetFireOrbs();
             characterControllers[i].ResetAnimator();
         }
+    }
+
+    /// <summary>
+    /// Returns an array of the transforms of the characters.
+    /// </summary>
+    /// <returns></returns>
+    public Transform[] GetCharacterTransforms()
+    {
+        if (characterControllers == null) return null;
+
+        Transform[] characterTransforms = new Transform[characterControllers.Length];
+
+        for (int i = 0; i < characterControllers.Length; i++)
+        {
+            characterTransforms[i] = characterControllers[i].transform;
+        }
+
+        return characterTransforms;
     }
     #endregion
 

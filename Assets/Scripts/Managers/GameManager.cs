@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
         public int winsCount;
     }
 
+    [Header("Camera")]
+    [SerializeField] private CameraController cameraController = null;
+
     [Header("UI")]
     [SerializeField] private GameObject splashScreen = null;
     [SerializeField] private GameObject gameGUIPanel = null;
@@ -149,6 +152,11 @@ public class GameManager : MonoBehaviour
         characterSelectUI.SetActive(false);
         roundUI.SetActive(true);
 
+        Transform[] characterTransforms = characterManager.GetCharacterTransforms();
+
+        if (characterTransforms != null && characterTransforms.Length > 1)
+            cameraController.Initialize(characterTransforms[0], characterTransforms[1]);
+
         SubscribeToCharacterEvents();
 
         StartCoroutine(RoundStartRoutine());
@@ -194,7 +202,7 @@ public class GameManager : MonoBehaviour
         while (Time.time < goPreview)
         {
             yield return null;
-        }        
+        }
 
         roundTimeText.text = (roundTime - 1).ToString();
         roundSecondsLeft = roundTime - 1;
@@ -265,7 +273,7 @@ public class GameManager : MonoBehaviour
                 ConcludeGame(winnerIndex.Value);
                 return;
             }
-        }        
+        }
 
         StartCoroutine(RoundStartRoutine());
         currentPhase = GamePhase.preparingRound;

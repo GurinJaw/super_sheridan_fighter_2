@@ -33,7 +33,7 @@ public class CharacterController : MonoBehaviour
     private const float damageCooldown = 0.4f;
     private const float fireballCooldown = 1.5f;
 
-    private const float fireballSpeed = 3f;
+    private const float fireballSpeed = 5f;
 
     private const int damage = 5;
     private const float movementSpeed = 1.5f;
