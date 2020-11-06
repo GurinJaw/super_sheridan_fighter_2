@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -26,22 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraController cameraController = null;
 
     [Header("UI")]
-    [SerializeField] private GameObject splashScreen = null;
-    [SerializeField] private GameObject gameGUIPanel = null;
-    [SerializeField] private GameObject characterSelectUI = null;
-    [SerializeField] private GameObject roundUI = null;
-    [SerializeField] private GameObject winScreen = null;
-
-    [SerializeField] private Text[] readyUI = null;
-
-    [SerializeField] private Text roundText = null;
-    [SerializeField] private Text roundTimeText = null;
-    [SerializeField] private Text[] playersWinCount = null;
-
-    [SerializeField] private Text winnerAnnouncement = null;
-
-    [SerializeField] private Image[] playersHealthBar = null;
-    [SerializeField] private Gradient healthBarGradient = null;
+    [SerializeField] private UIManager uiManager = null;
 
     private GamePhase currentPhase = GamePhase.splashScreen;
     private CharacterManager characterManager = null;
@@ -54,13 +38,11 @@ public class GameManager : MonoBehaviour
     private float roundEndTime = 0f;
 
     private const int playersCount = 2;
-    private const int roundTime = 10;
+    private const int roundTime = 99;
 
     #region UNITY
     void Start()
     {
-        splashScreen.SetActive(true);
-
         characterManager = GetComponent<CharacterManager>();
         InitializePlayers();
     }
@@ -111,9 +93,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetButtonDown("A" + _playerIndex))
         {
-            splashScreen.SetActive(false);
-            gameGUIPanel.SetActive(true);
-            characterSelectUI.SetActive(true);
+            uiManager.GoToSelectScreen();
             characterManager.Initialize(playersCount, new int[] { 0, 3 });
             currentPhase = GamePhase.characterSelect;
         }
@@ -126,7 +106,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("A" + _playerIndex))
         {
             players[_playerIndex].isReady = true;
-            readyUI[_playerIndex].enabled = true;
+            uiManager.PlayerReady(_playerIndex);
             InitializeMatch();
         }
         else
@@ -149,8 +129,7 @@ public class GameManager : MonoBehaviour
         // Initialize the characters
         characterManager.InitializeCharacters();
         // Enable UI elements
-        characterSelectUI.SetActive(false);
-        roundUI.SetActive(true);
+        uiManager.EnableMatchUI();
 
         Transform[] characterTransforms = characterManager.GetCharacterTransforms();
 
@@ -166,18 +145,18 @@ public class GameManager : MonoBehaviour
     IEnumerator RoundStartRoutine()
     {
         currentRound++;
-        roundText.text = "Round " + currentRound;
+        uiManager.UpdateRound(currentRound);
 
         int secondsLeft = 3;
         float startTime = Time.time + secondsLeft;
-        roundTimeText.text = secondsLeft.ToString();
+        uiManager.UpdateTimeLeft(secondsLeft);
 
         // Reset characters.
         characterManager.ResetCharacters();
 
         // Set healthbars.
         for (int i = 0; i < playersCount; i++)
-            UpdatePlayerHealthBar(i, 1f);
+            uiManager.UpdatePlayerHealthBar(i, 1f);
 
         // Countdown to start round.
         while (Time.time < startTime)
@@ -185,13 +164,13 @@ public class GameManager : MonoBehaviour
             if (startTime - Time.time <= secondsLeft - 1)
             {
                 secondsLeft--;
-                roundTimeText.text = secondsLeft.ToString();
+                uiManager.UpdateTimeLeft(secondsLeft);
             }
 
             yield return null;
         }
 
-        roundTimeText.text = "GO!";
+        uiManager.UpdateGameplayMessage("GO!");
 
         // Unlock players.
         characterManager.LockCharacters(false);
@@ -204,7 +183,7 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        roundTimeText.text = (roundTime - 1).ToString();
+        uiManager.UpdateTimeLeft(roundTime - 1);
         roundSecondsLeft = roundTime - 1;
         roundEndTime = Time.time + roundSecondsLeft;
 
@@ -216,11 +195,11 @@ public class GameManager : MonoBehaviour
         if (roundEndTime - Time.time <= roundSecondsLeft - 1)
         {
             roundSecondsLeft--;
-            roundTimeText.text = roundSecondsLeft.ToString();
+            uiManager.UpdateTimeLeft(roundSecondsLeft);
         }
         else if (roundSecondsLeft == 0)
         {
-            roundTimeText.text = (0).ToString();
+            uiManager.UpdateTimeLeft(0);
             ConcludeRound();
             return;
         }
@@ -235,19 +214,13 @@ public class GameManager : MonoBehaviour
     {
         float ratio = (float)_playerHealth / characterManager.CharacterMaxHealth;
 
-        UpdatePlayerHealthBar(_playerIndex, ratio);
+        uiManager.UpdatePlayerHealthBar(_playerIndex, ratio);
 
         if (_playerHealth == 0)
         {
             ConcludeRound();
             return;
         }
-    }
-
-    void UpdatePlayerHealthBar(int _playerIndex, float _ratio)
-    {
-        playersHealthBar[_playerIndex].fillAmount = _ratio;
-        playersHealthBar[_playerIndex].color = healthBarGradient.Evaluate(_ratio);
     }
 
     void ConcludeRound()
@@ -265,7 +238,7 @@ public class GameManager : MonoBehaviour
         if (winnerIndex != null)
         {
             players[winnerIndex.Value].winsCount++;
-            playersWinCount[winnerIndex.Value].text = players[winnerIndex.Value].winsCount.ToString();
+            uiManager.UpdatePlayerWinsCount(winnerIndex.Value, players[winnerIndex.Value].winsCount);
 
             // If a player won two rounds, conclude the game.
             if (players[winnerIndex.Value].winsCount == 2)
@@ -283,8 +256,7 @@ public class GameManager : MonoBehaviour
     {
         currentPhase = GamePhase.gameOver;
 
-        winnerAnnouncement.text = "Player " + (_winnerIndex + 1).ToString() + " wins!";
-        winScreen.SetActive(true);
+        uiManager.AnnounceWinner(_winnerIndex);
 
         characterManager.LockCharacters(true);
         characterManager.ResetCharacters();

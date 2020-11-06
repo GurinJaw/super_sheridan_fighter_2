@@ -399,7 +399,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &161933456
 GameObject:
@@ -588,7 +588,7 @@ Transform:
   m_Children:
   - {fileID: 939902226}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &325172649
 GameObject:
@@ -775,7 +775,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 137.416, y: -173.184, z: 45.369003}
 --- !u!1 &532833580
 GameObject:
@@ -1174,7 +1174,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 3.37, y: 0, z: 0}
 --- !u!1 &913666133
 GameObject:
@@ -1240,7 +1240,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &939902223
 GameObject:
@@ -1454,7 +1454,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &1079704732
 GameObject:
@@ -1709,7 +1709,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 3.37, y: 0, z: 0}
 --- !u!1 &1432020684
 GameObject:
@@ -1800,7 +1800,7 @@ GameObject:
   - component: {fileID: 1503053293}
   - component: {fileID: 1503053292}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1842,52 +1842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraController: {fileID: 1248175503}
-  splashScreen: {fileID: 109490883}
-  gameGUIPanel: {fileID: 1839217952}
-  characterSelectUI: {fileID: 532833580}
-  roundUI: {fileID: 2115663979}
-  winScreen: {fileID: 1432020684}
-  readyUI:
-  - {fileID: 627259524}
-  - {fileID: 1834922481}
-  roundText: {fileID: 821633042}
-  roundTimeText: {fileID: 1174598351}
-  playersWinCount:
-  - {fileID: 1673676197}
-  - {fileID: 1870447312}
-  winnerAnnouncement: {fileID: 707383228}
-  playersHealthBar:
-  - {fileID: 109879060}
-  - {fileID: 983493637}
-  healthBarGradient:
-    serializedVersion: 2
-    key0: {r: 0.7830189, g: 0.12927197, b: 0.12927197, a: 1}
-    key1: {r: 0.7982429, g: 0.23203129, b: 0.124221, a: 1}
-    key2: {r: 0.89944017, g: 0.9150943, b: 0.09064613, a: 1}
-    key3: {r: 0.35671163, g: 0.8787961, b: 0.34004113, a: 1}
-    key4: {r: 0.33521718, g: 0.8773585, b: 0.3499183, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
-    key6: {r: 0, g: 0, b: 0, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 8481
-    ctime2: 26214
-    ctime3: 45682
-    ctime4: 65535
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 65535
-    atime3: 65535
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 5
-    m_NumAlphaKeys: 2
+  uiManager: {fileID: 1745494775}
 --- !u!4 &1503053294
 Transform:
   m_ObjectHideFlags: 0
@@ -1900,7 +1855,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1673676195
 GameObject:
@@ -2088,6 +2043,7 @@ GameObject:
   - component: {fileID: 1745494773}
   - component: {fileID: 1745494772}
   - component: {fileID: 1745494771}
+  - component: {fileID: 1745494775}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2177,6 +2133,64 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1745494775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745494770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f69be654a8f51f4ba72d0ae00e0ac6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splashScreen: {fileID: 109490883}
+  gameGUIPanel: {fileID: 1839217952}
+  characterSelectUI: {fileID: 532833580}
+  roundUI: {fileID: 2115663979}
+  winScreen: {fileID: 1432020684}
+  readyUI:
+  - {fileID: 627259524}
+  - {fileID: 1834922481}
+  roundText: {fileID: 821633042}
+  roundTimeText: {fileID: 1174598351}
+  playersWinCount:
+  - {fileID: 1673676197}
+  - {fileID: 1870447312}
+  winnerAnnouncement: {fileID: 707383228}
+  playersHealthBar:
+  - {fileID: 109879060}
+  - {fileID: 983493637}
+  healthBarGradient:
+    serializedVersion: 2
+    key0: {r: 0.7924528, g: 0.19192725, b: 0.14578143, a: 1}
+    key1: {r: 0.7977712, g: 0.2440975, b: 0.14741208, a: 1}
+    key2: {r: 0.8541964, g: 0.79759085, b: 0.16471224, a: 0}
+    key3: {r: 0.8584906, g: 0.83971345, b: 0.16602883, a: 0}
+    key4: {r: 0.35990927, g: 0.8934318, b: 0.34352913, a: 0}
+    key5: {r: 0.33397114, g: 0.8962264, b: 0.35276338, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 10987
+    ctime2: 22359
+    ctime3: 32189
+    ctime4: 42983
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 6
+    m_NumAlphaKeys: 2
 --- !u!1 &1834922479
 GameObject:
   m_ObjectHideFlags: 0
