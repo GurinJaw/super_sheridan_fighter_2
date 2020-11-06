@@ -15,6 +15,7 @@ public class CharacterController : MonoBehaviour
 
     private int playerIndex = 0;
     private CharacterAnimator characterAnimator = null;
+    private CharacterAudioPlayer characterAudioPlayer = null;
     private Transform enemyTransform = null;
     private DamageTrigger[] damageTriggers = null;
 
@@ -77,6 +78,7 @@ public class CharacterController : MonoBehaviour
 
         damageTriggers = GetComponentsInChildren<DamageTrigger>();
         characterAnimator = GetComponent<CharacterAnimator>();
+        characterAudioPlayer = GetComponent<CharacterAudioPlayer>();
 
         fireOrbs = new List<GameObject>();
 
@@ -118,6 +120,7 @@ public class CharacterController : MonoBehaviour
         characterAnimator.SetBool(AnimatorParameter.lose, false);
         characterAnimator.Play("Idle");
         ResetFireOrbs();
+        StopAllCoroutines();
     }
 
     /// <summary>
@@ -206,6 +209,8 @@ public class CharacterController : MonoBehaviour
         if (OnTakenDamage != null)
             OnTakenDamage(playerIndex, health);
 
+        characterAudioPlayer.PlaySFX(CharacterAudioPlayer.CharacterSFX.Damage, 0.4f);
+
         if (health == 0)
         {
             characterAnimator.SetBool(AnimatorParameter.lose, true);
@@ -292,11 +297,19 @@ public class CharacterController : MonoBehaviour
         if (Input.GetButtonDown("A" + playerIndex))
         {
             characterAnimator.SetBool(AnimatorParameter.jump, true);
+            characterAudioPlayer.PlaySFX(CharacterAudioPlayer.CharacterSFX.Jump);
+            StartCoroutine(PlayLandSFXRoutine());
         }
         else if (Input.GetButtonUp("A" + playerIndex))
         {
             characterAnimator.SetBool(AnimatorParameter.jump, false);
         }
+    }
+
+    IEnumerator PlayLandSFXRoutine()
+    {
+        yield return new WaitForSeconds(0.6f);
+        characterAudioPlayer.PlaySFX(CharacterAudioPlayer.CharacterSFX.Land);
     }
 
     void ProcessBlock()
@@ -350,6 +363,7 @@ public class CharacterController : MonoBehaviour
         Rigidbody orbRigidBody = fireOrb.GetComponent<Rigidbody>();
         orbRigidBody.AddForce(Vector3.right * OrientationDirection() * fireballSpeed, ForceMode.Impulse);
         fireOrbs.Add(fireOrb);
+        characterAudioPlayer.PlaySFX(CharacterAudioPlayer.CharacterSFX.Fireball, 0.3f);
     }
 
     void ProcessTaunt()
@@ -368,6 +382,7 @@ public class CharacterController : MonoBehaviour
         if (dpadInput == 0) return;
 
         characterAnimator.SetTrigger(AnimatorParameter.taunt);
+        characterAudioPlayer.PlaySFX(CharacterAudioPlayer.CharacterSFX.Taunt);
     }
     #endregion
 
