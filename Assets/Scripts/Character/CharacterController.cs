@@ -243,6 +243,20 @@ public class CharacterController : MonoBehaviour
     {
         float moveInput = Input.GetAxis("LS_X" + playerIndex);
 
+        // Input for player 2 keyboard debugging.
+        if (playerIndex == 1 && moveInput == 0f)
+        {
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                moveInput = 1f;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                moveInput = -1f;
+            }
+        }
+
+
         if (moveInput == 0f || !characterAnimator.CanMove())
         {
             characterAnimator.SetBool(AnimatorParameter.walk, false);
@@ -341,6 +355,15 @@ public class CharacterController : MonoBehaviour
     void ProcessTaunt()
     {
         float dpadInput = Input.GetAxis("DPX" + playerIndex);
+
+        // Input for player 2 keyboard debugging.
+        if (playerIndex == 1 && dpadInput == 0f)
+        {
+            if (Input.GetKey(KeyCode.T))
+            {
+                dpadInput = 1f;
+            }
+        }
 
         if (dpadInput == 0) return;
 
